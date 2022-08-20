@@ -32,7 +32,7 @@ Say we want to encrypt/ decrypt a file named /home/user/sample.txt
 
 Don't lose the key file! you won't be able to decrypt an encrypted if you lose the keyfile.
 
-##More
+## More
 DES is provided for educational purposes only. Do not use for any other reason.
 It has been implemented after `J. Orlin Grabbe's DES Algorithm Illustrated <http://orlingrabbe.com/des.htm>`_
 
