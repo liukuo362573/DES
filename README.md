@@ -1,11 +1,7 @@
-###################
- DES in C
-###################
+## DES in C
 C implementation of Data Encryption Standard algorithm.
 
-###################
-文档
-###################
+## 文档
 [DES 手算](https://github.com/liukuo362573/DES/blob/master/DES%E6%89%8B%E7%AE%97.pdf)
 
 Overview
