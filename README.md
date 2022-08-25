@@ -2,7 +2,10 @@
 C implementation of Data Encryption Standard algorithm.
 
 ## 文档
+[DES](https://github.com/liukuo362573/DES/blob/master/DES.md)
+[分组加密算法](https://github.com/liukuo362573/DES/blob/master/%E5%88%86%E7%BB%84%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95.md)
 [DES 手算](https://github.com/liukuo362573/DES/blob/master/DES%E6%89%8B%E7%AE%97.pdf)
+[3DES 手算](https://github.com/liukuo362573/DES/blob/master/3DES.md)
 
 ## Overview
 The Data Encryption Standard (DES) is a block cipher (a form of shared secret encryption) that was selected by the National 
