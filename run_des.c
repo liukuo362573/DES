@@ -11,12 +11,12 @@
  */
 #include "des.h"
 
-// Declare file handlers
-static FILE *key_file, *input_file, *output_file;
+ // Declare file handlers
+static FILE* key_file, * input_file, * output_file;
 
 // Declare action parameters
-#define ACTION_GENERATE_KEY "-g"
-#define ACTION_ENCRYPT "-e"
+#define ACTION_GENERATE_KEY "-g"  // -g d:\key.txt
+#define ACTION_ENCRYPT "-e"       // -e d:\key.txt d:\text.txt d:\encrypt.txt
 #define ACTION_DECRYPT "-d"
 
 // DES key is 8 bytes long
@@ -46,10 +46,10 @@ int main(int argc, char* argv[]) {
 		}
 
 		unsigned int iseed = (unsigned int)time(NULL);
-		srand (iseed);
+		srand(iseed);
 
 		short int bytes_written;
-		unsigned char* des_key = (unsigned char*) malloc(8*sizeof(char));
+		unsigned char* des_key = (unsigned char*)malloc(8 * sizeof(char));
 		generate_key(des_key);
 		bytes_written = fwrite(des_key, 1, DES_KEY_SIZE, key_file);
 		if (bytes_written != DES_KEY_SIZE) {
@@ -61,7 +61,8 @@ int main(int argc, char* argv[]) {
 
 		free(des_key);
 		fclose(key_file);
-	} else if ((strcmp(argv[1], ACTION_ENCRYPT) == 0) || (strcmp(argv[1], ACTION_DECRYPT) == 0)) { // Encrypt or decrypt
+	}
+	else if ((strcmp(argv[1], ACTION_ENCRYPT) == 0) || (strcmp(argv[1], ACTION_DECRYPT) == 0)) { // Encrypt or decrypt
 		if (argc != 5) {
 			printf("Invalid # of parameters (%d) specified. Usage: run_des [-e|-d] keyfile.key input.file output.file", argc);
 			return 1;
@@ -75,7 +76,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		short int bytes_read;
-		unsigned char* des_key = (unsigned char*) malloc(8*sizeof(char));
+		unsigned char* des_key = (unsigned char*)malloc(8 * sizeof(char));
 		bytes_read = fread(des_key, sizeof(unsigned char), DES_KEY_SIZE, key_file);
 		if (bytes_read != DES_KEY_SIZE) {
 			printf("Key read from key file does nto have valid key size.");
@@ -101,20 +102,21 @@ int main(int argc, char* argv[]) {
 		// Generate DES key set
 		short int bytes_written, process_mode;
 		unsigned long block_count = 0, number_of_blocks;
-		unsigned char* data_block = (unsigned char*) malloc(8*sizeof(char));
-		unsigned char* processed_block = (unsigned char*) malloc(8*sizeof(char));
-		key_set* key_sets = (key_set*)malloc(17*sizeof(key_set));
+		unsigned char* data_block = (unsigned char*)malloc(8 * sizeof(char));
+		unsigned char* processed_block = (unsigned char*)malloc(8 * sizeof(char));
+		key_set* key_sets = (key_set*)malloc(17 * sizeof(key_set));
 
 		start = clock();
 		generate_sub_keys(des_key, key_sets);
 		finish = clock();
-		time_taken = (double)(finish - start)/(double)CLOCKS_PER_SEC;
+		time_taken = (double)(finish - start) / (double)CLOCKS_PER_SEC;
 
 		// Determine process mode
 		if (strcmp(argv[1], ACTION_ENCRYPT) == 0) {
 			process_mode = ENCRYPTION_MODE;
 			printf("Encrypting..\n");
-		} else {
+		}
+		else {
 			process_mode = DECRYPTION_MODE;
 			printf("Decrypting..\n");
 		}
@@ -124,16 +126,16 @@ int main(int argc, char* argv[]) {
 		file_size = ftell(input_file);
 
 		fseek(input_file, 0L, SEEK_SET);
-		number_of_blocks = file_size/8 + ((file_size%8)?1:0);
+		number_of_blocks = file_size / 8 + ((file_size % 8) ? 1 : 0);
 
 		start = clock();
 
 		// Start reading input file, process and write to output file
-		while(fread(data_block, 1, 8, input_file)) {
+		while (fread(data_block, 1, 8, input_file)) {
 			block_count++;
 			if (block_count == number_of_blocks) {
 				if (process_mode == ENCRYPTION_MODE) {
-					padding = 8 - file_size%8;
+					padding = 8 - file_size % 8;
 					if (padding < 8) { // Fill empty data block bytes with padding
 						memset((data_block + 8 - padding), (unsigned char)padding, padding);
 					}
@@ -146,7 +148,8 @@ int main(int argc, char* argv[]) {
 						process_message(data_block, processed_block, key_sets, process_mode);
 						bytes_written = fwrite(processed_block, 1, 8, output_file);
 					}
-				} else {
+				}
+				else {
 					process_message(data_block, processed_block, key_sets, process_mode);
 					padding = processed_block[7];
 
@@ -154,7 +157,8 @@ int main(int argc, char* argv[]) {
 						bytes_written = fwrite(processed_block, 1, 8 - padding, output_file);
 					}
 				}
-			} else {
+			}
+			else {
 				process_message(data_block, processed_block, key_sets, process_mode);
 				bytes_written = fwrite(processed_block, 1, 8, output_file);
 			}
@@ -171,10 +175,11 @@ int main(int argc, char* argv[]) {
 		fclose(output_file);
 
 		// Provide feedback
-		time_taken = (double)(finish - start)/(double)CLOCKS_PER_SEC;
+		time_taken = (double)(finish - start) / (double)CLOCKS_PER_SEC;
 		printf("Finished processing %s. Time taken: %lf seconds.\n", argv[3], time_taken);
 		return 0;
-	} else {
+	}
+	else {
 		printf("Invalid action: %s. First parameter must be [ -g | -e | -d ].", argv[1]);
 		return 1;
 	}
